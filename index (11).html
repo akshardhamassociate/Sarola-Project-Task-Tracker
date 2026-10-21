@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Akshardham Task Reporting</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f4f6fb;--card:#fff;--ink:#1b2433;--mute:#6b7586;--line:#e3e7ef;--brand:#1f3864;--brand2:#2f5aa8;
+  --done:#1e8e3e;--done-bg:#e6f4ea;--vp:#0f8b8d;--vp-bg:#e0f4f4;--wip:#e3a008;--wip-bg:#fff6dc;
+  --nd:#d93025;--nd-bg:#fce8e6;--bl:#7b3fb3;--bl-bg:#f1e8fa;--ns:#9aa0a6;--ns-bg:#f1f3f4;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;font-size:15px}
+button,input,select,textarea{font:inherit}
+.wrap{max-width:640px;margin:0 auto;padding:0 16px 90px}
+.top{background:var(--brand);color:#fff;padding:14px 16px 0;position:sticky;top:0;z-index:5}
+.top-in{max-width:640px;margin:0 auto}
+.top-row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.hello{font-weight:700;font-size:17px}
+.sub{opacity:.8;font-size:13px}
+.icon-btn{background:rgba(255,255,255,.15);border:0;color:#fff;border-radius:10px;padding:7px 10px;cursor:pointer}
+.tabs{display:flex;gap:4px;overflow-x:auto;margin-top:12px;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{background:none;border:0;color:#cfd8ea;padding:10px 12px;border-bottom:3px solid transparent;white-space:nowrap;cursor:pointer;font-weight:600}
+.tab.on{color:#fff;border-color:#fff}
+.cnt{display:inline-block;min-width:20px;padding:1px 6px;border-radius:10px;background:#ffcf4a;color:#1b2433;font-size:12px;margin-left:4px}
+h2{font-size:16px;margin:20px 0 10px}
+.muted{color:var(--mute);font-size:13px}
+.progress{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px;margin-top:16px}
+.bar{height:10px;border-radius:6px;background:#e9edf4;overflow:hidden;margin-top:8px}
+.bar>i{display:block;height:100%;background:var(--done);transition:width .4s}
+.card{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--ns);border-radius:14px;margin:10px 0;overflow:hidden}
+.card.s-done{border-left-color:var(--done)}.card.s-vp{border-left-color:var(--vp)}.card.s-wip{border-left-color:var(--wip)}
+.card.s-nd{border-left-color:var(--nd)}.card.s-bl{border-left-color:var(--bl)}
+.card-h{display:flex;justify-content:space-between;gap:10px;padding:12px 14px;cursor:pointer;align-items:flex-start}
+.tid{font-size:12px;color:var(--mute);display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.title{font-weight:600;margin-top:3px;line-height:1.35}
+.badge{font-size:11px;font-weight:700;padding:1px 6px;border-radius:6px;background:#e8eefb;color:var(--brand2)}
+.badge.A{background:#fde7d6;color:#b3541e}
+.chip{font-size:12px;font-weight:600;padding:4px 8px;border-radius:8px;white-space:nowrap;background:var(--ns-bg);color:#444}
+.chip.late{background:var(--nd-bg);color:var(--nd)}.chip.soon{background:#fff0e0;color:#c26100}
+.pill{font-size:12px;font-weight:600;padding:3px 8px;border-radius:8px;white-space:nowrap}
+.p-done{background:var(--done-bg);color:var(--done)}.p-vp{background:var(--vp-bg);color:var(--vp)}.p-wip{background:var(--wip-bg);color:#8a6100}
+.p-nd{background:var(--nd-bg);color:var(--nd)}.p-bl{background:var(--bl-bg);color:var(--bl)}.p-ns{background:var(--ns-bg);color:#555}
+.body{padding:0 14px 14px;border-top:1px dashed var(--line)}
+.meta{font-size:13px;color:var(--mute);margin:10px 0;line-height:1.5}
+details{background:#f8f9fc;border-radius:10px;padding:8px 10px;margin:8px 0;font-size:13px}
+summary{cursor:pointer;font-weight:600}
+.steps{white-space:pre-line;line-height:1.55;margin-top:6px}
+label{display:block;font-size:13px;font-weight:600;margin:12px 0 5px}
+textarea,input[type=text],input[type=tel],input[type=password],select{width:100%;padding:11px 12px;border:1px solid #cfd6e2;border-radius:10px;background:#fff;outline:none}
+textarea{min-height:70px;resize:vertical}
+textarea:focus,input:focus,select:focus{border-color:var(--brand2);box-shadow:0 0 0 3px rgba(47,90,168,.15)}
+.stgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.st{border:2px solid var(--line);background:#fff;border-radius:12px;padding:11px 8px;font-weight:700;cursor:pointer}
+.st[data-s="Done"].on{background:var(--done-bg);border-color:var(--done);color:var(--done)}
+.st[data-s="WIP"].on{background:var(--wip-bg);border-color:var(--wip);color:#8a6100}
+.st[data-s="Not Done"].on{background:var(--nd-bg);border-color:var(--nd);color:var(--nd)}
+.st[data-s="Blocked"].on{background:var(--bl-bg);border-color:var(--bl);color:var(--bl)}
+.btn{display:block;width:100%;border:0;border-radius:12px;padding:13px;font-weight:700;cursor:pointer;margin-top:14px;background:var(--brand);color:#fff}
+.btn.green{background:var(--done)}.btn.ghost{background:#eef2fa;color:var(--brand)}.btn.red{background:var(--nd)}
+.btn:disabled{opacity:.6;cursor:wait}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.row2 .btn{margin-top:10px}
+.empty{text-align:center;padding:30px 16px;color:var(--mute);background:#fff;border:1px dashed var(--line);border-radius:14px;margin-top:16px}
+.login{max-width:420px;margin:40px auto;background:#fff;border-radius:18px;padding:24px;border:1px solid var(--line)}
+.brand{font-weight:700;color:var(--brand);font-size:20px}
+.msgbox{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px;margin:12px 0}
+.msgbox pre{white-space:pre-wrap;font-family:inherit;font-size:13.5px;line-height:1.5;margin:8px 0 0;background:#f8f9fc;padding:10px;border-radius:10px;max-height:340px;overflow:auto}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.sbtn{border:1px solid var(--line);background:#fff;border-radius:10px;padding:8px 12px;font-weight:600;cursor:pointer;font-size:13px}
+.sbtn.wa{background:#25d366;border-color:#25d366;color:#fff}
+.help{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);padding:10px 16px calc(10px + env(safe-area-inset-bottom));font-size:13px;text-align:center;color:var(--mute)}
+.help a{color:var(--brand2);font-weight:700;text-decoration:none}
+.toast{position:fixed;left:50%;top:18px;transform:translateX(-50%);background:#1b2433;color:#fff;padding:11px 16px;border-radius:12px;z-index:50;font-weight:600;max-width:90%;box-shadow:0 8px 24px rgba(0,0,0,.2)}
+.toast.err{background:var(--nd)}
+.loading{text-align:center;padding:60px 16px;color:var(--mute)}
+.note{background:#fff8e1;border-radius:10px;padding:8px 10px;font-size:13px;margin-top:8px}
+.report-box{background:#f8f9fc;border-radius:10px;padding:10px;font-size:13px;line-height:1.5;margin-top:8px}
+</style>
+</head>
+<body>
+<div id="app"><div class="loading">Load ho raha hai...</div></div>
+
+<script>
+/* ====== Apps Script Web App URL yahan paste karo ====== */
+const API_URL = 'https://script.google.com/macros/s/AKfycbydef8G6aaxfIyQgwJ_84rZ6GXteVujzoi7D9zLtPOq8iybGZinIIwpTiWzyJD8ad1EFg/exec';
+
+const S = { team: [], me: null, code: '', pin: '', tab: 'report', open: null, pick: {}, busy: false, msgs: null, doubt: {} };
+const app = document.getElementById('app');
+
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const lsGet = k => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+const lsSet = (k, v) => { try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch (e) {} };
+
+async function api(action, payload = {}) {
+  if (API_URL.startsWith('PASTE')) throw new Error('index.html me API_URL daalna baaki hai');
+  const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action, code: S.code, pin: S.pin, ...payload }) });
+  const j = await res.json();
+  if (!j.ok) throw new Error(j.error || 'Kuch gadbad hui');
+  return j.data;
+}
+
+function toast(msg, err) {
+  const t = document.createElement('div');
+  t.className = 'toast' + (err ? ' err' : '');
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 2800);
+}
+
+const cls = st => ({ 'Done': 'done', 'Verify Pending': 'vp', 'WIP': 'wip', 'Not Done': 'nd', 'Blocked': 'bl' }[st] || 'ns');
+const stLabel = st => ({ 'Done': '✅ Done', 'Verify Pending': '🔍 Verify pending', 'WIP': '🟡 WIP', 'Not Done': '🔴 Not Done', 'Blocked': '🚧 Blocked', 'Not Started': '⬜ Not Started' }[st] || st);
+const roleBadges = r => r.filter(x => x === 'A' || x === 'R').map(x => `<span class="badge ${x}">${x === 'A' ? 'Accountable' : 'Responsible'}</span>`).join('');
+
+function dlChip(t) {
+  const d = t.daysLeft;
+  if (d === '' || d == null) return '<span class="chip">No deadline</span>';
+  if (d < 0) return `<span class="chip late">${-d} din late</span>`;
+  if (d === 0) return '<span class="chip soon">Aaj deadline</span>';
+  if (d === 1) return '<span class="chip soon">Kal deadline</span>';
+  return `<span class="chip">${d} din · ${esc(t.deadline)}</span>`;
+}
+
+/* ---------- START / LOGIN ---------- */
+
+async function start() {
+  try { S.team = await api('team'); }
+  catch (e) { app.innerHTML = `<div class="login"><div class="brand">Akshardham</div><p>${esc(e.message)}</p></div>`; return; }
+  const c = lsGet('ts_code'), p = lsGet('ts_pin');
+  if (c && p) {
+    S.code = c; S.pin = p;
+    try { await loadMe(true); return; } catch (e) { lsSet('ts_pin', null); }
+  }
+  renderLogin();
+}
+
+function renderLogin() {
+  const saved = lsGet('ts_code') || '';
+  app.innerHTML = `
+  <div class="wrap"><div class="login">
+    <div class="brand">Akshardham Associates</div>
+    <div class="muted">Daily Task Reporting</div>
+    <label>Aapka naam</label>
+    <select id="l-code"><option value="">Chuno...</option>
+      ${S.team.map(m => `<option value="${esc(m.code)}" ${m.code === saved ? 'selected' : ''}>${esc(m.naam)}</option>`).join('')}
+    </select>
+    <label>4 digit PIN</label>
+    <input id="l-pin" type="password" inputmode="numeric" maxlength="6" placeholder="••••" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="btn" id="l-btn" onclick="doLogin()">Login</button>
+    <p class="muted" style="margin-top:14px">PIN nahi pata? Bhavesh se lein.</p>
+  </div></div>`;
+}
+
+async function doLogin() {
+  const code = document.getElementById('l-code').value;
+  const pin = document.getElementById('l-pin').value.trim();
+  if (!code || !pin) return toast('Naam aur PIN dono daalo', true);
+  const b = document.getElementById('l-btn'); b.disabled = true; b.textContent = 'Check ho raha hai...';
+  S.code = code; S.pin = pin;
+  try { await loadMe(true); lsSet('ts_code', code); lsSet('ts_pin', pin); }
+  catch (e) { toast(e.message, true); b.disabled = false; b.textContent = 'Login'; }
+}
+
+async function loadMe(first) {
+  S.me = await api('login');
+  if (first) S.tab = S.me.tasks.some(t => t.needsAccept) ? 'accept' : 'report';
+  render();
+}
+
+function logout() { lsSet('ts_pin', null); S.me = null; S.pin = ''; S.msgs = null; renderLogin(); }
+
+/* ---------- MAIN RENDER ---------- */
+
+function render() {
+  const T = S.me.tasks;
+  const pend = T.filter(t => t.mustReport && !t.reportedToday);
+  const acc = T.filter(t => t.needsAccept);
+  const ver = T.filter(t => t.canVerify);
+  const tabs = [
+    ['report', '📝 Aaj ki Report', pend.length],
+    ['accept', '✅ Accept', acc.length],
+    ...(ver.length ? [['verify', '🔍 Verify', ver.length]] : []),
+    ['all', '📋 Mere Kaam', 0],
+    ...(S.me.isCoordinator ? [['msgs', '📢 Messages', 0]] : [])
+  ];
+  if (!tabs.some(t => t[0] === S.tab)) S.tab = 'report';
+  const c = S.me.coordinator;
+  app.innerHTML = `
+  <div class="top"><div class="top-in">
+    <div class="top-row">
+      <div><div class="hello">Namaste, ${esc(S.me.naam)} 🙏</div><div class="sub">${esc(S.me.today)} · Project Sarola</div></div>
+      <div style="display:flex;gap:6px"><button class="icon-btn" onclick="refresh()">⟳</button><button class="icon-btn" onclick="logout()">Logout</button></div>
+    </div>
+    <div class="tabs">${tabs.map(t => `<button class="tab ${S.tab === t[0] ? 'on' : ''}" onclick="go('${t[0]}')">${t[1]}${t[2] ? `<span class="cnt">${t[2]}</span>` : ''}</button>`).join('')}</div>
+  </div></div>
+  <div class="wrap">${({ report: viewReport, accept: viewAccept, verify: viewVerify, all: viewAll, msgs: viewMsgs })[S.tab]()}</div>
+  <div class="help">Koi bhi confusion? <b>${esc(c.naam)}</b> se contact karein${c.mobile ? ` · <a href="tel:${esc(c.mobile)}">📞 Call</a> · <a href="https://wa.me/91${esc(c.mobile.replace(/\D/g, '').slice(-10))}" target="_blank">WhatsApp</a>` : ''}</div>`;
+  if (S.tab === 'msgs' && !S.msgs && !S.msgLoading) loadMsgs();
+}
+
+function go(tab) { S.tab = tab; S.open = null; render(); window.scrollTo(0, 0); }
+async function refresh() { try { await loadMe(); S.msgs = null; render(); toast('Updated ✅'); } catch (e) { toast(e.message, true); } }
+function toggle(id) { S.open = S.open === id ? null : id; render(); }
+
+/* ---------- REPORT TAB ---------- */
+
+function viewReport() {
+  const T = S.me.tasks;
+  const pend = T.filter(t => t.mustReport && !t.reportedToday);
+  const done = T.filter(t => t.reportedToday);
+  const total = pend.length + done.length;
+  const pct = total ? Math.round(done.length / total * 100) : 100;
+  let h = `<div class="progress"><b>Aaj ki reporting: ${done.length}/${total}</b>
+    <div class="bar"><i style="width:${pct}%"></i></div>
+    <div class="muted" style="margin-top:6px">${pend.length ? 'Har kaam par click karke report daalo. Shaam 6 baje tak.' : 'Aaj ki saari reporting complete ✅ Shabash!'}</div></div>`;
+  if (pend.length) h += `<h2>Report baaki (${pend.length})</h2>` + pend.map(reportCard).join('');
+  else if (!total) h += `<div class="empty">Aaj aapke naam koi pending kaam nahi hai 🎉</div>`;
+  if (done.length) h += `<h2>Aaj report di ✅</h2>` + done.map(t => `
+    <div class="card s-${cls(t.reportedToday.status)}"><div class="card-h"><div>
+      <div class="tid">${esc(t.id)}</div><div class="title">${esc(t.kaam)}</div>
+      <div class="muted" style="margin-top:4px">${esc(t.reportedToday.kya)}</div></div>
+      <span class="pill p-${cls(t.reportedToday.status)}">${stLabel(t.reportedToday.status)}</span></div></div>`).join('');
+  return h;
+}
+
+function reportCard(t) {
+  const open = S.open === t.id;
+  const pick = S.pick[t.id] || '';
+  return `<div class="card s-${cls(t.status)}">
+    <div class="card-h" onclick="toggle('${t.id}')"><div>
+      <div class="tid">${esc(t.id)} ${roleBadges(t.roles)}</div>
+      <div class="title">${esc(t.kaam)}</div>
+      <div class="muted" style="margin-top:4px">Abhi: ${stLabel(t.status)}</div></div>
+      ${dlChip(t)}</div>
+    ${open ? `<div class="body">
+      <div class="meta">✅ <b>Done kab maanenge:</b> ${esc(t.done)}<br>👤 A: ${esc(t.aNames || '-')} · 👥 R: ${esc(t.rNames || '-')}</div>
+      <details><summary>📋 Kaise karna hai</summary><div class="steps">${esc(t.steps)}</div></details>
+      <label>Aaj ka status *</label>
+      <div class="stgrid">
+        ${['Done', 'WIP', 'Not Done', 'Blocked'].map(s => `<button class="st ${pick === s ? 'on' : ''}" data-s="${s}" onclick="pickSt('${t.id}','${s}',this)">${stLabel(s)}</button>`).join('')}
+      </div>
+      <label>Aaj kya kiya? *</label>
+      <textarea id="f-kya-${t.id}" placeholder="2 line me likho..."></textarea>
+      <label>Kal kya karunga?</label>
+      <textarea id="f-kal-${t.id}" placeholder="Next step..."></textarea>
+      <label id="lb-ruk-${t.id}">Rukawat / help chahiye?${pick === 'Blocked' ? ' *' : ''}</label>
+      <textarea id="f-ruk-${t.id}" placeholder="Kahan atke ho, kisse help chahiye"></textarea>
+      <label>Photo proof (optional)</label>
+      <input type="file" id="f-photo-${t.id}" accept="image/*">
+      <button class="btn" id="f-btn-${t.id}" onclick="submitReport('${t.id}')">Report Submit karo</button>
+    </div>` : ''}
+  </div>`;
+}
+
+function pickSt(id, s, el) {
+  S.pick[id] = s;
+  el.parentElement.querySelectorAll('.st').forEach(b => b.classList.toggle('on', b === el));
+  const lb = document.getElementById('lb-ruk-' + id);
+  if (lb) lb.textContent = 'Rukawat / help chahiye?' + (s === 'Blocked' ? ' *' : '');
+}
+
+function compress(file) {
+  return new Promise((res, rej) => {
+    const img = new Image(), url = URL.createObjectURL(file);
+    img.onload = () => {
+      const s = Math.min(1, 1280 / Math.max(img.width, img.height));
+      const c = document.createElement('canvas');
+      c.width = Math.round(img.width * s); c.height = Math.round(img.height * s);
+      c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(url);
+      res({ name: file.name, type: 'image/jpeg', data: c.toDataURL('image/jpeg', 0.72).split(',')[1] });
+    };
+    img.onerror = () => rej(new Error('Photo load nahi hui'));
+    img.src = url;
+  });
+}
+
+async function submitReport(id) {
+  const status = S.pick[id];
+  const kya = document.getElementById('f-kya-' + id).value.trim();
+  const kal = document.getElementById('f-kal-' + id).value.trim();
+  const ruk = document.getElementById('f-ruk-' + id).value.trim();
+  const file = document.getElementById('f-photo-' + id).files[0];
+  if (!status) return toast('Pehle status chuno', true);
+  if (kya.length < 3) return toast("'Aaj kya kiya' likho", true);
+  if (status === 'Blocked' && !ruk) return toast('Rukawat likhna zaroori hai', true);
+  const b = document.getElementById('f-btn-' + id); b.disabled = true; b.textContent = 'Save ho raha hai...';
+  try {
+    const photo = file ? await compress(file) : null;
+    const r = await api('report', { taskId: id, status, kya, kal, rukawat: ruk, photo });
+    toast(r.status === 'Verify Pending' ? 'Report save ✅ Accountable verify karenge' : 'Report save ✅');
+    S.open = null; delete S.pick[id];
+    await loadMe();
+  } catch (e) { toast(e.message, true); b.disabled = false; b.textContent = 'Report Submit karo'; }
+}
+
+/* ---------- ACCEPT TAB ---------- */
+
+function viewAccept() {
+  const acc = S.me.tasks.filter(t => t.needsAccept);
+  if (!acc.length) return `<div class="empty">Aapne saare kaam accept kar liye hain ✅</div>`;
+  return `<div class="progress"><b>Ye kaam aapke naam hain</b>
+      <div class="muted" style="margin-top:6px">Har kaam padho. Samajh aa gaya to "Ready hoon" dabao. Koi confusion ho to "Doubt hai" dabakar likho, ${esc(S.me.coordinator.naam)} aapko call karenge.</div>
+      <button class="btn green" id="acc-all" onclick="acceptAll()">✅ Saare ${acc.length} kaam padh liye, ready hoon</button></div>
+    ${acc.map(t => `<div class="card s-${cls(t.status)}">
+      <div class="card-h" onclick="toggle('${t.id}')"><div>
+        <div class="tid">${esc(t.id)} ${roleBadges(t.roles)}</div><div class="title">${esc(t.kaam)}</div></div>${dlChip(t)}</div>
+      <div class="body">
+        <div class="meta">✅ <b>Done kab maanenge:</b> ${esc(t.done)}<br>👤 A: ${esc(t.aNames || '-')} · 👥 R: ${esc(t.rNames || '-')}</div>
+        <details ${S.open === t.id ? 'open' : ''}><summary>📋 Kaise karna hai</summary><div class="steps">${esc(t.steps)}</div></details>
+        ${t.note ? `<div class="note">📌 ${esc(t.note)}</div>` : ''}
+        ${t.doubtPending ? `<div class="note">❓ Aapka doubt: "${esc(t.doubtPending)}" (${esc(S.me.coordinator.naam)} contact karenge)</div>` : ''}
+        ${S.doubt[t.id] ? `<label>Kya doubt hai?</label><textarea id="d-${t.id}" placeholder="Apna sawal likho..."></textarea>
+          <div class="row2"><button class="btn ghost" onclick="S.doubt['${t.id}']=false;render()">Cancel</button><button class="btn" onclick="sendDoubt('${t.id}')">Doubt bhejo</button></div>`
+        : `<div class="row2"><button class="btn ghost" onclick="S.doubt['${t.id}']=true;render()">❓ Doubt hai</button><button class="btn green" onclick="acceptOne('${t.id}',this)">✅ Ready hoon</button></div>`}
+      </div></div>`).join('')}`;
+}
+
+async function sendAccept(items, btn, okMsg) {
+  if (btn) { btn.disabled = true; btn.textContent = 'Save ho raha hai...'; }
+  try { await api('accept', { items }); toast(okMsg); await loadMe(); }
+  catch (e) { toast(e.message, true); if (btn) btn.disabled = false; render(); }
+}
+function acceptOne(id, btn) { sendAccept([{ taskId: id, response: 'Accepted' }], btn, 'Accept ho gaya ✅'); }
+function acceptAll() {
+  const items = S.me.tasks.filter(t => t.needsAccept).map(t => ({ taskId: t.id, response: 'Accepted' }));
+  sendAccept(items, document.getElementById('acc-all'), 'Saare kaam accept ho gaye ✅');
+}
+function sendDoubt(id) {
+  const d = document.getElementById('d-' + id).value.trim();
+  if (!d) return toast('Doubt likho', true);
+  S.doubt[id] = false;
+  sendAccept([{ taskId: id, response: 'Doubt', doubt: d }], null, `Doubt bhej diya, ${S.me.coordinator.naam} contact karenge`);
+}
+
+/* ---------- VERIFY TAB ---------- */
+
+function viewVerify() {
+  const ver = S.me.tasks.filter(t => t.canVerify);
+  if (!ver.length) return `<div class="empty">Verify ke liye kuch pending nahi ✅</div>`;
+  return `<h2>Aapke verify karne ke liye (${ver.length})</h2>` + ver.map(t => {
+    const l = t.last || {};
+    return `<div class="card s-vp"><div class="card-h"><div>
+        <div class="tid">${esc(t.id)} <span class="badge A">Accountable</span></div><div class="title">${esc(t.kaam)}</div></div>${dlChip(t)}</div>
+      <div class="body">
+        <div class="meta">✅ <b>Done kab maanenge:</b> ${esc(t.done)}</div>
+        <div class="report-box"><b>${esc(l.naam || '')}</b> · ${esc(l.date || '')}<br>${esc(l.kya || '')}
+          ${l.proof ? `<br><a href="${esc(l.proof)}" target="_blank">📷 Proof dekho</a>` : ''}</div>
+        <label>Comment (wapas bhejne par zaroori)</label>
+        <textarea id="v-${t.id}" placeholder="Kya kami hai..."></textarea>
+        <div class="row2"><button class="btn red" onclick="verify('${t.id}','reject',this)">↩ Wapas bhejo</button>
+        <button class="btn green" onclick="verify('${t.id}','approve',this)">✅ Approve (Done)</button></div>
+      </div></div>`;
+  }).join('');
+}
+
+async function verify(id, decision, btn) {
+  const comment = document.getElementById('v-' + id).value.trim();
+  if (decision === 'reject' && !comment) return toast('Reason likho', true);
+  btn.disabled = true;
+  try { await api('verify', { taskId: id, decision, comment }); toast(decision === 'approve' ? 'Done approve ✅' : 'Wapas bhej diya ↩'); await loadMe(); }
+  catch (e) { toast(e.message, true); btn.disabled = false; }
+}
+
+/* ---------- ALL TASKS ---------- */
+
+function viewAll() {
+  const T = S.me.tasks;
+  if (!T.length) return `<div class="empty">Aapke naam koi kaam nahi</div>`;
+  const order = ['Blocked', 'Not Done', 'Not Started', 'WIP', 'Verify Pending', 'Done'];
+  const sorted = [...T].sort((a, b) => order.indexOf(a.status) - order.indexOf(b.status) || (a.daysLeft ?? 999) - (b.daysLeft ?? 999));
+  return `<h2>Mere saare kaam (${T.length})</h2>` + sorted.map(t => `
+    <div class="card s-${cls(t.status)}"><div class="card-h" onclick="toggle('${t.id}')"><div>
+      <div class="tid">${esc(t.id)} ${roleBadges(t.roles)}</div><div class="title">${esc(t.kaam)}</div>
+      <div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap"><span class="pill p-${cls(t.status)}">${stLabel(t.status)}</span>${t.status !== 'Done' ? dlChip(t) : ''}</div></div></div>
+      ${S.open === t.id ? `<div class="body"><div class="meta">✅ <b>Done kab maanenge:</b> ${esc(t.done)}<br>👤 A: ${esc(t.aNames || '-')} · 👥 R: ${esc(t.rNames || '-')}</div>
+        <div class="steps" style="font-size:13px">${esc(t.steps)}</div>
+        ${t.last ? `<div class="report-box">Last report: <b>${esc(t.last.naam)}</b> (${esc(t.last.date)}): ${esc(t.last.kya)}</div>` : ''}</div>` : ''}
+    </div>`).join('');
+}
+
+/* ---------- MESSAGES (Bhavesh / Krishan Sir) ---------- */
+
+async function loadMsgs(rebuild) {
+  S.msgLoading = true;
+  try { S.msgs = await api('messages', rebuild ? { rebuild } : {}); }
+  catch (e) { S.msgs = { error: e.message }; }
+  S.msgLoading = false;
+  if (S.tab === 'msgs') render();
+}
+
+function viewMsgs() {
+  const m = S.msgs;
+  if (!m) return `<div class="loading">Messages load ho rahe hain...</div>`;
+  if (m.error) return `<div class="empty">${esc(m.error)}</div>`;
+  const box = (key, title, text, group, rebuild) => `<div class="msgbox"><b>${title}</b>
+    ${text ? `<pre>${esc(text)}</pre>` : `<div class="muted" style="margin-top:6px">Abhi bana nahi hai.</div>`}
+    <div class="btns">
+      ${text ? `<button class="sbtn" onclick="copyMsg('${key}')">📋 Copy</button>` : ''}
+      ${text && group ? `<a class="sbtn wa" href="https://wa.me/?text=${encodeURIComponent(text)}" target="_blank" onclick="markSent('${title}')">WhatsApp pe bhejo</a>` : ''}
+      ${rebuild ? `<button class="sbtn" onclick="S.msgs=null;S.msgLoading=true;render();loadMsgs('${rebuild}')">⟳ Abhi banao</button>` : ''}
+    </div></div>`;
+  return `<h2>Aaj ke messages · ${esc(m.date)}</h2>
+    <div class="muted">Pehle padh lo, phir Attendance group me bhejo.${m.sent ? `<br><b>Bheje gaye:</b> ${esc(m.sent).replace(/\n/g, ', ')}` : ''}</div>
+    ${box('morning', '🌅 Morning message', m.morning, true, 'morning')}
+    ${box('evening', '📊 Evening feedback', m.evening, true, 'evening')}
+    ${box('alerts', '🔔 Bhavesh ke alerts (group me nahi bhejna)', m.alerts, false, '')}
+    ${box('krishan', '🧾 Krishan Sir summary', m.krishan, false, '')}`;
+}
+
+async function copyMsg(key) {
+  const text = S.msgs[key];
+  try { await navigator.clipboard.writeText(text); }
+  catch (e) { const t = document.createElement('textarea'); t.value = text; document.body.appendChild(t); t.select(); document.execCommand('copy'); t.remove(); }
+  toast('Copy ho gaya 📋');
+}
+async function markSent(which) {
+  try { const r = await api('markSent', { which }); S.msgs.sent = (S.msgs.sent ? S.msgs.sent + '\n' : '') + r.sent; } catch (e) {}
+}
+
+start();
+</script>
+</body>
+</html>
