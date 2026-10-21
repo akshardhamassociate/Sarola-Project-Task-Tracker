@@ -210,6 +210,15 @@ textarea:focus,input:focus,select:focus{border-color:var(--ink2)}
 .who span.s-done{background:var(--done-bg);color:var(--done)}.who span.s-wip{background:var(--wip-bg);color:#8A5A00}
 .who span.s-nd{background:var(--nd-bg);color:var(--nd)}.who span.s-bl{background:var(--bl-bg);color:var(--bl)}
 .nav.six button{font-size:11.5px}
+.pick{display:flex;flex-wrap:wrap;gap:8px}
+.pick button{border:1.5px solid var(--line);background:#fff;border-radius:22px;padding:8px 14px;font-weight:600;font-size:14.5px}
+.pick button.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.hintline{font-size:14px;color:var(--mute);margin-top:6px}
+.hintline b{color:var(--ink)}
+input[type=text],input[type=number]{width:100%;padding:12px 13px;border:1.5px solid var(--line);border-radius:12px;background:#fff;outline:none;font-size:16px}
+input[type=text]:focus,input[type=number]:focus{border-color:var(--ink2)}
+.addbtn{margin-top:16px}
+.addbtn svg,.btn svg{width:19px;height:19px}
 .clear{background:none;border:0;color:var(--ink2);font-weight:700;font-size:14px;padding:0}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
@@ -221,7 +230,7 @@ textarea:focus,input:focus,select:focus{border-color:var(--ink2)}
 /* ====== Apps Script Web App URL yahan paste karo ====== */
 const API_URL = 'https://script.google.com/macros/s/AKfycbydef8G6aaxfIyQgwJ_84rZ6GXteVujzoi7D9zLtPOq8iybGZinIIwpTiWzyJD8ad1EFg/exec';
 
-const S = { team: [], me: null, code: '', pin: '', tab: 'report', open: null, pick: {}, msgs: null, msgLoading: false, doubt: {}, justDone: null, dash: null, dashLoading: false, df: 'all', dp: null };
+const S = { team: [], me: null, code: '', pin: '', tab: 'report', open: null, pick: {}, msgs: null, msgLoading: false, doubt: {}, justDone: null, dash: null, dashLoading: false, df: 'all', dp: null, edit: null, editA: '', editR: [] };
 const app = document.getElementById('app');
 
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -240,6 +249,9 @@ const ICON = {
   phone:  svg('<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/>'),
   camera: svg('<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>'),
   copy:   svg('<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/>'),
+  plus:   svg('<path d="M12 5v14M5 12h14"/>'),
+  edit:   svg('<path d="M4 20h4L19 9l-4-4L4 16z"/>'),
+  trash:  svg('<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>'),
   chart:  svg('<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>'),
   send:   svg('<path d="M21 3 10 14M21 3l-7 18-4-7-7-4z"/>')
 };
@@ -364,7 +376,7 @@ function render() {
         <button class="ibtn" onclick="refresh()" aria-label="Refresh">${ICON.refresh}</button>
         <button class="ibtn" onclick="logout()" aria-label="Logout">${ICON.logout}</button></div>
     </div>
-    ${S.tab === 'report' ? naksha(pend, repd) : S.tab === 'dash' ? dashHead() : `<h1 class="page-title">${TITLES[S.tab][0]}</h1><div class="page-sub">${TITLES[S.tab][1]}</div>`}
+    ${S.tab === 'report' ? naksha(pend, repd) : S.tab === 'dash' && S.edit ? `<h1 class="page-title">${S.edit.id ? 'Kaam badlo' : 'Naya kaam jodo'}</h1><div class="page-sub">${S.edit.id ? esc(S.edit.id) + ': save karte hi Sheet me bhi badal jayega' : 'Save karte hi Sheet me nayi row ban jayegi'}</div>` : S.tab === 'dash' ? dashHead() : `<h1 class="page-title">${TITLES[S.tab][0]}</h1><div class="page-sub">${TITLES[S.tab][1]}</div>`}
   </div></header>
   <main class="wrap">${view}</main>
   <nav class="nav ${tabs.length > 5 ? 'six' : ''}" aria-label="Sections"><div class="nav-in">
@@ -404,7 +416,7 @@ function jump(id) {
   if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-function go(tab) { S.tab = tab; S.open = null; render(); window.scrollTo(0, 0); }
+function go(tab) { S.tab = tab; S.open = null; S.edit = null; render(); window.scrollTo(0, 0); }
 async function refresh() { try { S.msgs = null; S.dash = null; await loadMe(); toast('Updated'); } catch (e) { toast(e.message, true); } }
 function toggle(id) { S.open = S.open === id ? null : id; render(); }
 
@@ -635,6 +647,7 @@ function viewDash() {
   const d = S.dash;
   if (!d) return `<div class="loading">Dashboard taiyaar ho raha hai...</div>`;
   if (d.error) return `<div class="empty"><b>Dashboard load nahi hua</b>${esc(d.error)}</div>`;
+  if (S.edit) return editForm();
   const T = d.tasks;
   const repDone = d.people.reduce((n, p) => n + p.repToday, 0), repDue = d.people.reduce((n, p) => n + p.dueToday, 0);
   const filters = [
@@ -654,7 +667,8 @@ function viewDash() {
   const segColors = [['Done', 'var(--done)'], ['Verify Pending', 'var(--vp)'], ['WIP', 'var(--gold)'], ['Not Done', 'var(--nd)'], ['Blocked', 'var(--bl)']];
   const pName = S.dp ? (d.people.find(p => p.code === S.dp) || {}).naam : '';
 
-  let h = `<div class="chips">${filters.map(([k, n, c, w]) => `<button class="chip ${S.df === k ? 'on' : ''} ${w && c ? 'warn' : ''}" onclick="setDf('${k}')">${n} <b>${c}</b></button>`).join('')}</div>`;
+  let h = `<button class="btn addbtn" onclick="openEdit()">${ICON.plus}Naya kaam jodo</button>`;
+  h += `<div class="chips">${filters.map(([k, n, c, w]) => `<button class="chip ${S.df === k ? 'on' : ''} ${w && c ? 'warn' : ''}" onclick="setDf('${k}')">${n} <b>${c}</b></button>`).join('')}</div>`;
 
   h += `<div class="sec">Team, aaj ki reporting ${repDone}/${repDue}</div>` + d.people.map(p => {
     const segs = segColors.map(([s, col]) => p.st[s] ? `<i style="width:${p.st[s] / p.total * 100}%;background:${col}"></i>` : '').join('');
@@ -693,9 +707,100 @@ function viewDash() {
           ${l.rukawat ? `<br><b>Rukawat:</b> ${esc(l.rukawat)}` : ''}${l.kal ? `<br><b>Agla step:</b> ${esc(l.kal)}` : ''}
           ${l.proof ? `<br><a href="${esc(l.proof)}" target="_blank" rel="noopener">Photo proof dekho</a>` : ''}</div>`
         : '<div class="note">Is kaam ki abhi tak koi report nahi aayi.</div>'}
+        ${t.note ? `<div class="note">${esc(t.note)}</div>` : ''}
+        <div class="row2"><button class="btn soft" onclick="openEdit('${t.id}')">${ICON.edit}Badlo</button>
+          <button class="btn out" id="del-${esc(t.id)}" onclick="deleteTask('${t.id}')">${ICON.trash}Hatao</button></div>
       </div>` : ''}</div>`;
   }).join('');
   return h;
+}
+
+/* ---------- KAAM ADD / EDIT / DELETE ---------- */
+
+function openEdit(id) {
+  const t = id ? S.dash.tasks.find(x => x.id === id) : null;
+  S.edit = t ? { ...t } : { id: '', kaam: '', din: 7, done: '', steps: '', priority: 'Normal', start: '' };
+  S.editA = t ? (t.aRaw[0] || '') : '';
+  S.editR = t ? [...t.rRaw] : [];
+  render(); window.scrollTo(0, 0);
+}
+function closeEdit() { const id = S.edit && S.edit.id; S.edit = null; S.open = id || null; render(); }
+function pickA(c, el) { S.editA = c; el.parentElement.querySelectorAll('button').forEach(b => b.classList.toggle('on', b === el)); }
+function pickR(c, el) {
+  const i = S.editR.indexOf(c);
+  if (i < 0) S.editR.push(c); else S.editR.splice(i, 1);
+  el.classList.toggle('on', i < 0);
+}
+function deadlineHint() {
+  const din = parseInt(document.getElementById('e-din').value, 10);
+  const el = document.getElementById('e-dl');
+  if (!el) return;
+  if (!(din >= 1)) { el.textContent = 'Din likho'; return; }
+  const base = S.edit.start ? new Date(S.edit.start + 'T00:00:00') : new Date();
+  base.setDate(base.getDate() + din);
+  el.innerHTML = 'Deadline: <b>' + base.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) + '</b>' + (S.edit.start ? '' : ' (aaj se ' + din + ' din)');
+}
+
+function editForm() {
+  const e = S.edit;
+  const team = S.team;
+  setTimeout(deadlineHint, 0);
+  return `<div class="panel">
+    <label for="e-kaam">Kaam kya hai?</label>
+    <input type="text" id="e-kaam" value="${esc(e.kaam)}" placeholder="Jaise: Hoarding lagwana">
+    <label>Accountable (A) <small>(ek chuno, jo kaam ka zimmedar hai)</small></label>
+    <div class="pick">${team.map(m => `<button class="${S.editA === m.code ? 'on' : ''}" onclick="pickA('${m.code}',this)">${esc(m.naam)}</button>`).join('')}</div>
+    <label>Responsible (R) <small>(jo kaam karenge, ek ya zyada)</small></label>
+    <div class="pick">${team.map(m => `<button class="${S.editR.includes(m.code) ? 'on' : ''}" onclick="pickR('${m.code}',this)">${esc(m.naam)}</button>`).join('')}</div>
+    <label for="e-din">Kitne din me hona hai?</label>
+    <input type="number" id="e-din" min="1" max="365" inputmode="numeric" value="${esc(e.din)}" oninput="deadlineHint()">
+    <div class="hintline" id="e-dl"></div>
+    <label>Priority</label>
+    <div class="pick">${['Normal', 'High'].map(p => `<button class="${(e.priority || 'Normal').indexOf(p) === 0 ? 'on' : ''}" onclick="S.edit.priority='${p}';this.parentElement.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b===this))">${p === 'High' ? 'Zaroori (High)' : 'Normal'}</button>`).join('')}</div>
+    <label for="e-done">Done kab maanenge? <small>(optional)</small></label>
+    <input type="text" id="e-done" value="${esc(e.done)}" placeholder="Jaise: 5 jagah hoarding lag gaye + photo">
+    <label for="e-steps">Kaise karna hai? <small>(optional, har step nayi line me)</small></label>
+    <textarea id="e-steps" placeholder="1. Location final karo&#10;2. Vendor se rate lo">${esc(e.steps)}</textarea>
+    <div class="row2"><button class="btn soft" onclick="closeEdit()">Wapas</button>
+      <button class="btn ok" id="e-save" onclick="saveTask()">${e.id ? 'Save karo' : 'Kaam jodo'}</button></div>
+  </div>`;
+}
+
+async function saveTask() {
+  const task = {
+    id: S.edit.id || '',
+    kaam: document.getElementById('e-kaam').value.trim(),
+    a: S.editA, r: S.editR.join(','),
+    din: document.getElementById('e-din').value,
+    priority: S.edit.priority || 'Normal',
+    done: document.getElementById('e-done').value.trim(),
+    steps: document.getElementById('e-steps').value.trim()
+  };
+  if (task.kaam.length < 3) return toast('Kaam ka naam likho', true);
+  if (!task.a) return toast('Accountable chuno', true);
+  if (!task.r) return toast('Kam se kam ek Responsible chuno', true);
+  if (!(parseInt(task.din, 10) >= 1)) return toast('Din likho', true);
+  const b = document.getElementById('e-save'); b.disabled = true; b.textContent = 'Save ho raha hai...';
+  try {
+    const r = await api('taskSave', { task });
+    const wasEdit = !!task.id;
+    S.edit = null; S.dash = null; S.df = 'all'; S.dp = null; S.open = r.id;
+    await loadMe();
+    toast(wasEdit ? 'Badlav save ho gaya, Sheet bhi update ho gayi' : `Kaam jud gaya (${r.id}), Sheet me bhi aa gaya`);
+  } catch (e) { toast(e.message, true); b.disabled = false; b.textContent = task.id ? 'Save karo' : 'Kaam jodo'; }
+}
+
+async function deleteTask(id) {
+  const t = S.dash.tasks.find(x => x.id === id);
+  if (!t) return;
+  if (!confirm(`"${t.kaam}" ko hamesha ke liye hatana hai?\n\nYe Sheet se bhi hat jayega. Iski purani reports record me bachi rahengi.\n\nKaam pura hua hai to hatane ki jagah Done approve karo.`)) return;
+  const b = document.getElementById('del-' + id); if (b) { b.disabled = true; b.textContent = 'Hata rahe hain...'; }
+  try {
+    await api('taskDelete', { taskId: id });
+    S.dash = null; S.open = null;
+    await loadMe();
+    toast('Kaam hata diya, Sheet se bhi hat gaya');
+  } catch (e) { toast(e.message, true); if (b) { b.disabled = false; b.textContent = 'Hatao'; } }
 }
 
 /* ---------- MESSAGES ---------- */
