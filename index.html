@@ -81,10 +81,20 @@ button{cursor:pointer}
 .task-meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px;align-items:center}
 .tag{font-size:12.5px;font-weight:600;padding:1px 8px;border-radius:20px;background:#E6EAF5;color:var(--ink2)}
 .tag.a{background:var(--gold-soft);color:#6B4500}
+.tag.r{background:#DCEBFF;color:#1D4ED8}
+.tag.c{background:#EDE4F7;color:#6B3FA0}
+.tag.i{background:#EEF0F5;color:#5E6683}
+.banner{display:block;width:100%;text-align:left;margin-top:16px;padding:13px 14px;border-radius:14px;border:1.5px solid var(--gold);background:var(--gold-soft);color:var(--ink)}
+.banner b{display:block;font-size:15.5px}
+.banner span{font-size:14px;color:#6B4500}
+.actbox{margin-top:12px;padding:11px 13px;border-radius:12px;background:#F4F6FB;font-size:14.5px;color:var(--mute)}
+.actbox.ok{background:var(--done-bg);color:var(--done)}
+.actbox b{display:block;color:inherit}
+.formbox{margin-top:8px;padding-top:4px;border-top:1px dashed var(--line)}
 .due{font-size:13px;color:var(--mute)}
 .due.soon{color:#A65F00;font-weight:600}
 .due.late{color:var(--nd);font-weight:700}
-.pill{font-size:13px;font-weight:700;padding:2px 9px;border-radius:20px}
+.pill{font-size:13px;font-weight:700;padding:2px 9px;border-radius:20px;white-space:nowrap}
 .p-done{background:var(--done-bg);color:var(--done)}.p-vp{background:var(--vp-bg);color:var(--vp)}
 .p-wip{background:var(--wip-bg);color:#8A5A00}.p-nd{background:var(--nd-bg);color:var(--nd)}
 .p-bl{background:var(--bl-bg);color:var(--bl)}.p-ns{background:var(--ns-bg);color:var(--mute)}
@@ -220,6 +230,111 @@ input[type=text]:focus,input[type=number]:focus{border-color:var(--ink2)}
 .addbtn{margin-top:16px}
 .addbtn svg,.btn svg{width:19px;height:19px}
 .clear{background:none;border:0;color:var(--ink2);font-weight:700;font-size:14px;padding:0}
+
+/* ---------- dashboard (wide) ---------- */
+.top.wide .top-in,.wrap.wide{max-width:1280px}
+.dh-top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin-top:16px}
+.gbtn{display:flex;align-items:center;gap:6px;border:0;border-radius:12px;padding:10px 14px;background:var(--gold);color:var(--ink);font-weight:700;font-size:15px;flex:0 0 auto}
+.gbtn svg{width:18px;height:18px}
+.kpis{display:grid;grid-template-columns:repeat(6,1fr);margin-top:18px;border:1px solid rgba(255,255,255,.16);border-radius:14px;overflow:hidden;background:rgba(255,255,255,.04)}
+.kpi{background:none;border:0;border-right:1px solid rgba(255,255,255,.12);color:#fff;text-align:left;padding:14px 16px;display:flex;flex-direction:column;gap:2px}
+.kpi:last-child{border-right:0}
+.kpi:hover{background:rgba(255,255,255,.06)}
+.kpi b{font-family:Rajdhani,sans-serif;font-size:36px;line-height:1;font-weight:700}
+.kpi b em{font-style:normal;font-size:20px;opacity:.55}
+.kpi span{font-size:14px;opacity:.85}
+.kpi small{font-size:12.5px;opacity:.6}
+.kpi.k-done b{color:#6FD39A}.kpi.k-wip b{color:var(--gold)}.kpi.k-bad b{color:#FF8E7C}
+.bigbar{display:flex;height:10px;border-radius:6px;overflow:hidden;background:rgba(255,255,255,.12);margin-top:16px}
+.bigbar i{display:block;height:100%}
+.dgrid{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:18px;margin-top:20px;align-items:start}
+.dside{display:flex;flex-direction:column;gap:18px}
+.pnl{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px}
+.ph{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+.ph h2{font-size:17px;margin:0}
+.ph h2 span{font-weight:500;color:var(--mute);font-size:14.5px;margin-left:6px}
+.cnt2{min-width:24px;height:24px;border-radius:12px;background:var(--nd-bg);color:var(--nd);font-weight:700;font-size:13px;display:grid;place-items:center;padding:0 7px}
+.hint2{font-size:13px;color:var(--mute)}
+.search{flex:1 1 220px;max-width:320px;padding:9px 12px;border:1.5px solid var(--line);border-radius:10px;font-size:15px;outline:none}
+.search:focus{border-color:var(--ink2)}
+.ftabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.ftabs button{border:1.5px solid var(--line);background:#fff;border-radius:20px;padding:6px 12px;font-weight:600;font-size:14px;display:flex;gap:6px;align-items:center;color:var(--ink)}
+.ftabs button b{font-family:Rajdhani,sans-serif;font-size:16px;color:var(--mute)}
+.ftabs button.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.ftabs button.on b{color:var(--gold)}
+.ftabs .clr{background:var(--gold-soft);border-color:var(--gold)}
+.trow{display:grid;grid-template-columns:52px minmax(200px,1fr) 118px 150px 88px 128px;gap:10px;align-items:center;width:100%;padding:10px 8px;background:none;border:0;border-bottom:1px solid var(--line);text-align:left;font-size:15px;color:var(--ink)}
+.trow:hover{background:#F8F9FC}
+.thead{font-size:12.5px;color:var(--mute);font-weight:600;padding-top:4px;padding-bottom:8px}
+.thead:hover{background:none}
+.tid{width:46px;height:42px;border-radius:8px;background:var(--ns-bg);display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:Rajdhani,sans-serif;font-size:11px;font-weight:600;line-height:1;color:var(--mute)}
+.tid b{font-size:19px;color:var(--ink)}
+.tid.s-done{background:var(--done)}.tid.s-vp{background:var(--vp)}.tid.s-wip{background:var(--gold)}.tid.s-nd{background:var(--nd)}.tid.s-bl{background:var(--bl)}
+.tid.s-done,.tid.s-vp,.tid.s-nd,.tid.s-bl{color:rgba(255,255,255,.8)}.tid.s-done b,.tid.s-vp b,.tid.s-nd b,.tid.s-bl b{color:#fff}
+.c-kaam{font-weight:600;line-height:1.3}
+.c-kaam em.warn{display:inline-block;margin-left:8px;font-style:normal;font-size:12px;font-weight:700;color:var(--nd);background:var(--nd-bg);border-radius:10px;padding:1px 7px}
+.c-a,.c-r{font-size:14px;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dl{font-size:14px;display:flex;flex-direction:column;line-height:1.2}
+.dl small{font-size:12px;color:var(--mute)}
+.dl.late{color:var(--nd);font-weight:700}.dl.soon{color:#A65F00;font-weight:700}
+.trow-wrap.open{background:#F8F9FC;border-radius:12px}
+.trow-wrap.open .trow{border-bottom-color:transparent}
+.tdetail{padding:4px 12px 16px 76px;border-bottom:1px solid var(--line)}
+.tdetail label{display:block;font-size:12.5px;color:var(--mute);font-weight:600;margin:10px 0 4px}
+.tdg{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;font-size:14.5px}
+.tdg label{margin-top:0}
+.tact{display:flex;gap:8px;margin-top:14px}
+.sbtn2{display:flex;align-items:center;gap:6px;border:1.5px solid var(--line);background:#fff;border-radius:10px;padding:8px 14px;font-weight:600;font-size:14px;color:var(--ink)}
+.sbtn2 svg{width:16px;height:16px}
+.sbtn2.danger{color:var(--nd);border-color:#F2C4BC}
+.dempty{padding:18px;text-align:center;color:var(--mute);font-size:14.5px}
+.al{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-top:1px solid var(--line);font-size:14.5px;cursor:default}
+.ph + .al{border-top:0}
+.al[onclick]{cursor:pointer}
+.al div{flex:1;min-width:0}
+.al small{display:block;color:var(--mute);font-size:13px;margin-top:1px}
+.dot{flex:0 0 9px;height:9px;border-radius:50%;margin-top:7px}
+.dot.bad{background:var(--nd)}.dot.gold{background:var(--gold)}.dot.bl{background:var(--bl)}
+.callb{flex:0 0 34px;height:34px;border-radius:10px;background:#E6EAF5;color:var(--ink);display:grid;place-items:center}
+.callb svg{width:16px;height:16px}
+.tm{display:flex;gap:11px;align-items:center;width:100%;padding:10px 8px;margin:0 -8px;width:calc(100% + 16px);background:none;border:0;border-radius:10px;text-align:left;color:var(--ink)}
+.tm:hover{background:#F8F9FC}
+.tm.on{background:#EEF2FB;box-shadow:inset 3px 0 0 var(--ink2)}
+.av{flex:0 0 36px;height:36px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;font-weight:700}
+.tm-m{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px}
+.tm-n{font-weight:600;font-size:15px;display:flex;justify-content:space-between;gap:8px}
+.tm-n small{font-weight:400;color:var(--mute);font-size:13px}
+.tm-s{display:flex;gap:12px;font-size:13px;color:var(--mute)}
+.tm-s .bad{color:var(--nd);font-weight:700}
+.mnaksha{display:grid;grid-template-columns:repeat(auto-fill,minmax(42px,1fr));gap:5px}
+.mt{aspect-ratio:1/1;border:1.5px dashed #C5CCDC;border-radius:4px;background:#fff;font-family:Rajdhani,sans-serif;font-weight:700;font-size:15px;line-height:1;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--ink);padding:0}
+.mt span{font-size:9.5px;opacity:.6}
+.mt.s-done{background:var(--done);border:0;color:#fff}.mt.s-vp{background:var(--vp);border:0;color:#fff}.mt.s-wip{background:var(--gold);border:0}
+.mt.s-nd{background:var(--nd);border:0;color:#fff}.mt.s-bl{background:var(--bl);border:0;color:#fff}
+.mt.late{box-shadow:0 0 0 2px var(--nd)}
+@media (max-width:1240px) and (min-width:701px){
+  .trow{grid-template-columns:52px minmax(200px,1fr) 118px 88px 128px}
+  .trow .c-r{display:none}
+}
+@media (max-width:960px){
+  .dgrid{grid-template-columns:1fr}
+  .dside{order:-1}
+  .kpis{grid-template-columns:repeat(3,1fr)}
+  .kpi:nth-child(3){border-right:0}
+  .kpi:nth-child(-n+3){border-bottom:1px solid rgba(255,255,255,.12)}
+}
+@media (max-width:700px){
+  .trow{grid-template-columns:48px minmax(0,1fr) auto;row-gap:4px}
+  .trow .c-a,.trow .c-r{display:none}
+  .trow .c-dl{grid-column:2;grid-row:2}
+  .trow .c-st{grid-column:3;grid-row:1 / span 2}
+  .thead{display:none}
+  .tdetail{padding-left:12px}
+  .tdg{grid-template-columns:1fr 1fr}
+  .kpi{padding:12px}
+  .kpi b{font-size:28px}
+  .dh-top{align-items:flex-start}
+}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -230,7 +345,7 @@ input[type=text]:focus,input[type=number]:focus{border-color:var(--ink2)}
 /* ====== Apps Script Web App URL yahan paste karo ====== */
 const API_URL = 'https://script.google.com/macros/s/AKfycbydef8G6aaxfIyQgwJ_84rZ6GXteVujzoi7D9zLtPOq8iybGZinIIwpTiWzyJD8ad1EFg/exec';
 
-const S = { team: [], me: null, code: '', pin: '', tab: 'report', open: null, pick: {}, msgs: null, msgLoading: false, doubt: {}, justDone: null, dash: null, dashLoading: false, df: 'all', dp: null, edit: null, editA: '', editR: [] };
+const S = { team: [], me: null, code: '', pin: '', tab: 'report', open: null, pick: {}, msgs: null, msgLoading: false, doubt: {}, justDone: null, repOpen: null, dq: '', dash: null, dashLoading: false, df: 'all', dp: null, edit: null, editA: '', editR: [] };
 const app = document.getElementById('app');
 
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -278,7 +393,11 @@ const cls = st => ({ 'Done': 'done', 'Verify Pending': 'vp', 'WIP': 'wip', 'Not 
 const stName = st => ({ 'Done': 'Done', 'Verify Pending': 'Verify baaki', 'WIP': 'Chal raha hai', 'Not Done': 'Nahi hua', 'Blocked': 'Atka hua', 'Not Started': 'Shuru nahi hua' }[st] || st);
 const idParts = id => { const i = String(id).indexOf('-'); return i < 0 ? ['', String(id)] : [id.slice(0, i), id.slice(i + 1)]; };
 const plotBlock = (t, st) => { const [a, b] = idParts(t.id); return `<div class="plot s-${cls(st)}"><span>${esc(a)}</span><b>${esc(b)}</b></div>`; };
-const roleTags = r => (r.includes('A') ? '<span class="tag a">Aap Accountable</span>' : '') + (r.includes('R') ? '<span class="tag">Aap Responsible</span>' : '');
+const ROLE = { A: ['a', 'Aap Accountable'], R: ['r', 'Aap Responsible'], C: ['c', 'Aapse salah (Consulted)'], I: ['i', 'Aapko jaankari (Informed)'] };
+const roleTags = r => ['A', 'R', 'C', 'I'].filter(x => (r || []).includes(x)).map(x => `<span class="tag ${ROLE[x][0]}">${ROLE[x][1]}</span>`).join('');
+const isOpenTask = t => t.status !== 'Done' && t.status !== 'Verify Pending';
+const canRep = t => (t.canReport !== undefined ? t.canReport : ((t.roles || []).some(x => x === 'A' || x === 'R') && isOpenTask(t)));
+const inReport = t => canRep(t) && !t.needsAccept;   // accept karne ke baad hi Report me aata hai
 
 function due(t) {
   const d = t.daysLeft;
@@ -369,12 +488,12 @@ const TITLES = {
 
 function render() {
   const T = S.me.tasks;
-  const pend = T.filter(t => t.canReport && !t.reportedToday);
+  const pend = T.filter(t => inReport(t) && !t.reportedToday);
   const repd = T.filter(t => t.reportedToday);
   const acc = T.filter(t => t.needsAccept);
   const ver = T.filter(t => t.canVerify);
   const tabs = [
-    ['report', 'Report', pend.filter(t => t.mustReport).length, ICON.report],
+    ['report', 'Report', pend.length, ICON.report],
     ['accept', 'Accept', acc.length, ICON.accept],
     ...(ver.length ? [['verify', 'Verify', ver.length, ICON.verify]] : []),
     ['all', 'Mere kaam', 0, ICON.list],
@@ -386,7 +505,7 @@ function render() {
   const view = { report: viewReport, accept: viewAccept, verify: viewVerify, all: viewAll, msgs: viewMsgs, dash: viewDash }[S.tab]();
 
   app.innerHTML = `
-  <header class="top"><div class="top-in">
+  <header class="top ${S.tab === 'dash' && !S.edit ? 'wide' : ''}"><div class="top-in">
     <div class="top-row">
       <div><div class="hello">Namaste, ${esc(S.me.naam)}</div><div class="sub">${esc(S.me.today)}, Project Sarola${S.stale ? ' · <span style="color:var(--gold)">update ho raha hai...</span>' : ''}</div></div>
       <div class="top-actions">${callBtn}
@@ -395,7 +514,7 @@ function render() {
     </div>
     ${S.tab === 'report' ? naksha(pend, repd) : S.tab === 'dash' && S.edit ? `<h1 class="page-title">${S.edit.id ? 'Kaam badlo' : 'Naya kaam jodo'}</h1><div class="page-sub">${S.edit.id ? esc(S.edit.id) + ': save karte hi Sheet me bhi badal jayega' : 'Save karte hi Sheet me nayi row ban jayegi'}</div>` : S.tab === 'dash' ? dashHead() : `<h1 class="page-title">${TITLES[S.tab][0]}</h1><div class="page-sub">${TITLES[S.tab][1]}</div>`}
   </div></header>
-  <main class="wrap">${view}</main>
+  <main class="wrap ${S.tab === 'dash' && !S.edit ? 'wide' : ''}">${view}</main>
   <nav class="nav ${tabs.length > 5 ? 'six' : ''}" aria-label="Sections"><div class="nav-in">
     ${tabs.map(t => `<button class="${S.tab === t[0] ? 'on' : ''}" onclick="go('${t[0]}')" ${S.tab === t[0] ? 'aria-current="page"' : ''}>
       ${t[3]}${t[2] ? `<span class="badge">${t[2]}</span>` : ''}<span>${t[1]}</span></button>`).join('')}
@@ -441,15 +560,17 @@ function toggle(id) { S.open = S.open === id ? null : id; render(); }
 
 function viewReport() {
   const T = S.me.tasks;
-  const mine = T.filter(t => t.mustReport && !t.reportedToday);
-  const asA = T.filter(t => t.canReport && !t.mustReport && !t.reportedToday);
-  const pend = mine.concat(asA);
+  const waiting = T.filter(t => canRep(t) && t.needsAccept);
+  const mine = T.filter(t => inReport(t) && t.mustReport && !t.reportedToday);
+  const asA = T.filter(t => inReport(t) && !t.mustReport && !t.reportedToday);
   const done = T.filter(t => t.reportedToday);
   let h = '';
+  if (waiting.length) h += `<button class="banner" onclick="go('accept')"><b>${waiting.length} kaam accept karna baaki hai</b><span>"Ready hoon" dabate hi wo kaam yahan report ke liye aa jayenge</span></button>`;
   if (mine.length) h += `<div class="sec">Report baaki hai (${mine.length})</div>` + mine.map(reportCard).join('');
   if (asA.length) h += `<div class="sec">Aap Accountable ho (${asA.length})</div><div class="hintline" style="margin:-4px 2px 6px">Inki report team daalegi. Aap bhi update daal sakte ho.</div>` + asA.map(reportCard).join('');
-  else if (done.length) h += `<div class="empty"><b>Aaj ka kaam pura</b>Saari report ho gayi. Kal subah naye kaam yahan dikhenge.</div>`;
-  else h += `<div class="empty"><b>Aaj koi kaam nahi</b>Aapke naam abhi koi pending kaam nahi hai.</div>`;
+  if (!mine.length && !asA.length) h += done.length
+    ? `<div class="empty"><b>Aaj ka kaam pura</b>Saari report ho gayi. Kal subah naye kaam yahan dikhenge.</div>`
+    : `<div class="empty"><b>Abhi report ke liye koi kaam nahi</b>${waiting.length ? 'Pehle Accept tab me kaam accept karo.' : 'Aapke naam abhi koi pending kaam nahi hai.'}</div>`;
   if (done.length) h += `<div class="sec">Aaj report di (${done.length})</div>` + done.map(t => `
     <div class="donerow" id="c-${esc(t.id)}">${plotBlock(t, t.reportedToday.status)}
       <div class="t"><div>${esc(t.kaam)}</div><p>${esc(t.reportedToday.kya)}</p></div>
@@ -469,6 +590,15 @@ function reportCard(t) {
       <div class="info"><b>Done kab maanenge:</b> ${esc(t.done)}</div>
       <div class="info"><b>Accountable:</b> ${esc(t.aNames || '-')}&nbsp;&nbsp; <b>Team:</b> ${esc(t.rNames || '-')}</div>
       <details><summary>Kaise karna hai</summary><div class="steps">${esc(t.steps)}</div></details>
+      ${reportForm(t)}
+    </div>` : ''}
+  </div>`;
+}
+
+function reportForm(t) {
+  const pick = S.pick[t.id] || '';
+  const opts = [['Done', 'Kaam pura'], ['WIP', 'Thoda kaam hua'], ['Not Done', 'Aaj nahi hua'], ['Blocked', 'Atka hua hai']];
+  return `
       <label>Aaj ka status</label>
       <div class="stgrid">${opts.map(([s, sub]) => `<button class="st ${pick === s ? 'on' : ''}" data-s="${s}" onclick="pickSt('${t.id}','${s}',this)"><i></i><span>${esc(stName(s))}<small>${sub}</small></span></button>`).join('')}</div>
       <label for="f-kya-${t.id}">Aaj kya kiya?</label>
@@ -480,9 +610,7 @@ function reportCard(t) {
       <label>Photo proof <small>(optional)</small></label>
       <label class="file" style="margin:0;font-weight:500">${ICON.camera}<span id="f-fn-${t.id}">Photo lagao</span>
         <input type="file" id="f-photo-${t.id}" accept="image/*" onchange="document.getElementById('f-fn-${t.id}').textContent=this.files[0]?this.files[0].name:'Photo lagao'"></label>
-      <button class="btn" id="f-btn-${t.id}" onclick="submitReport('${t.id}')">Report bhejo</button>
-    </div>` : ''}
-  </div>`;
+      <button class="btn" id="f-btn-${t.id}" onclick="submitReport('${t.id}')">Report bhejo</button>`;
 }
 
 function pickSt(id, s, el) {
@@ -523,7 +651,7 @@ async function submitReport(id) {
     const prev = S.me;
     // turant dikhao, server ka jawab baad me aayega
     S.me = { ...S.me, tasks: S.me.tasks.map(t => t.id === id ? { ...t, reportedToday: { status, kya } } : t) };
-    S.open = null; S.justDone = id; render();
+    S.open = S.tab === 'all' ? id : null; S.repOpen = null; S.justDone = id; render();
     window.scrollTo({ top: 0, behavior: 'smooth' });
     toast('Report bhej rahe hain...');
     try {
@@ -532,7 +660,7 @@ async function submitReport(id) {
       setMe(r.me); render();
       toast(r.status === 'Verify Pending' ? 'Report bhej di. Accountable verify karenge.' : 'Report bhej di');
     } catch (e) {
-      S.me = prev; S.open = id; render();
+      S.me = prev; S.open = id; if (S.tab === 'all') S.repOpen = id; render();
       const f = (k, v) => { const el = document.getElementById(k + id); if (el) el.value = v; };
       f('f-kya-', kya); f('f-kal-', kal); f('f-ruk-', ruk);
       toast(e.message + ' (likha hua bacha hai, dobara bhejo)', true);
@@ -570,10 +698,10 @@ async function sendAccept(items, btn, okMsg) {
   try { const r = await api('accept', { items }); S.dash = null; setMe(r.me); render(); toast(okMsg); }
   catch (e) { toast(e.message, true); if (btn) btn.disabled = false; render(); }
 }
-function acceptOne(id, btn) { sendAccept([{ taskId: id, response: 'Accepted' }], btn, 'Kaam accept ho gaya'); }
+function acceptOne(id, btn) { sendAccept([{ taskId: id, response: 'Accepted' }], btn, 'Accept ho gaya. Ab ye Report tab me hai'); }
 function acceptAll() {
   const items = S.me.tasks.filter(t => t.needsAccept).map(t => ({ taskId: t.id, response: 'Accepted' }));
-  sendAccept(items, document.getElementById('acc-all'), 'Saare kaam accept ho gaye');
+  sendAccept(items, document.getElementById('acc-all'), 'Saare kaam accept ho gaye. Ab ye Report tab me hain');
 }
 function sendDoubt(id) {
   const d = document.getElementById('d-' + id).value.trim();
@@ -632,9 +760,23 @@ function viewAll() {
           <div class="info"><b>Accountable:</b> ${esc(t.aNames || '-')}&nbsp;&nbsp; <b>Team:</b> ${esc(t.rNames || '-')}</div>
           <details><summary>Kaise karna hai</summary><div class="steps">${esc(t.steps)}</div></details>
           ${t.last ? `<div class="quote">Aakhri report: <b>${esc(t.last.naam)}</b>, ${esc(t.last.date)}<br>${esc(t.last.kya)}</div>` : ''}
+          ${taskAction(t)}
         </div>` : ''}</div>`;
     }).join('');
   }).join('');
+}
+
+function taskAction(t) {
+  if (t.reportedToday) return `<div class="actbox ok"><b>Aaj ki report de di</b>${esc(stName(t.reportedToday.status))}: ${esc(t.reportedToday.kya)}</div>`;
+  if (t.canVerify) return `<button class="btn ok" onclick="go('verify')">${ICON.verify}Verify karo</button>`;
+  if (t.needsAccept) return `<div class="actbox">Pehle kaam accept karo, phir yahin se report daal sakte ho.</div>
+      <div class="row2"><button class="btn soft" onclick="S.tab='accept';S.doubt['${t.id}']=true;render()">Doubt hai</button>
+      <button class="btn ok" onclick="acceptOne('${t.id}',this)">Ready hoon</button></div>`;
+  if (canRep(t)) return S.repOpen === t.id
+    ? `<div class="formbox">${reportForm(t)}</div>`
+    : `<button class="btn" onclick="S.repOpen='${t.id}';render();document.getElementById('f-kya-${t.id}')?.scrollIntoView({behavior:'smooth',block:'center'})">${ICON.report}Aaj ki report daalo</button>`;
+  if (t.status === 'Done') return `<div class="actbox ok"><b>Kaam pura ho gaya</b></div>`;
+  return `<div class="actbox">Aap is kaam me ${t.roles.includes('C') ? 'salah dene' : 'jaankari'} ke liye ho. Report team daalegi.</div>`;
 }
 
 /* ---------- DASHBOARD (Bhavesh / Krishan Sir) ---------- */
@@ -654,26 +796,106 @@ const noRep = t => isOpenSt(t.status) && t.today.some(x => !x.status);
 function dashHead() {
   const d = S.dash;
   if (!d || d.error) return `<h1 class="page-title">Project dashboard</h1><div class="page-sub">${d && d.error ? esc(d.error) : 'Data aa raha hai...'}</div>`;
-  const done = d.counts['Done'] || 0;
-  const tiles = [...d.tasks].sort((a, b) => String(a.id).localeCompare(String(b.id)));
+  const c = k => d.counts[k] || 0;
+  const T = d.tasks, total = d.total || 1;
+  const late = T.filter(isLate).length;
+  const repDone = d.people.reduce((n, p) => n + p.repToday, 0), repDue = d.people.reduce((n, p) => n + p.dueToday, 0);
+  const pct = (a, b) => (b ? Math.round(a / b * 100) : 0);
+  const kpi = (val, label, sub, tone, f) => `<button class="kpi ${tone || ''}" ${f ? `onclick="setDf('${f}')"` : 'tabindex="-1"'}><b>${val}</b><span>${label}</span>${sub ? `<small>${sub}</small>` : ''}</button>`;
+  const seg = [['Done', 'var(--done)'], ['Verify Pending', 'var(--vp)'], ['WIP', 'var(--gold)'], ['Not Done', 'var(--nd)'], ['Blocked', 'var(--bl)']];
   return `
-    <div class="naksha-head"><div class="score"><b>${done}</b><span>/${d.total}</span></div>
-      <div class="score-txt">kaam pure ho gaye. Ye ${esc(d.project)} ka poora naksha hai, har plot ek kaam.</div></div>
-    <div class="naksha big" role="list">
-      ${tiles.map(t => { const [a, b] = idParts(t.id); const c = t.status === 'Not Started' ? '' : 'f-' + cls(t.status);
-        return `<button role="listitem" class="plot-tile ${c} ${isLate(t) ? 'late-mark' : ''}" onclick="dashJump('${t.id}')" aria-label="${esc(t.kaam)}: ${esc(stName(t.status))}"><span>${esc(a)}</span><b>${esc(b)}</b></button>`; }).join('')}
+    <div class="dh-top">
+      <div><h1 class="page-title">${esc(d.project)}</h1><div class="page-sub">Live dashboard, ${esc(d.today)} ${esc(d.updated)} tak ka data</div></div>
+      <button class="gbtn" onclick="openEdit()">${ICON.plus}Naya kaam</button>
     </div>
-    <div class="legend"><span><i style="background:var(--done)"></i>Done</span><span><i style="background:var(--vp)"></i>Verify baaki</span><span><i style="background:var(--gold)"></i>Chal raha hai</span><span><i style="background:var(--nd)"></i>Nahi hua</span><span><i style="background:var(--bl)"></i>Atka hua</span><span><i class="lg-empty"></i>Shuru nahi hua</span><span><i style="box-shadow:inset 0 0 0 2px var(--nd);background:transparent"></i>Late</span></div>
-    <div class="updated">${esc(d.today)}, ${esc(d.updated)} tak ka data</div>`;
+    <div class="kpis">
+      ${kpi(`${c('Done')}<em>/${d.total}</em>`, 'Pure hue', pct(c('Done'), d.total) + '% project', 'k-done', 'done')}
+      ${kpi(c('WIP') + c('Verify Pending'), 'Chal rahe', c('Verify Pending') ? c('Verify Pending') + ' verify baaki' : '', 'k-wip', 'vp')}
+      ${kpi(c('Not Started'), 'Shuru nahi hue', '', '', 'all')}
+      ${kpi(c('Blocked') + c('Not Done'), 'Atke / nahi hue', '', (c('Blocked') + c('Not Done')) ? 'k-bad' : '', 'bl')}
+      ${kpi(late, 'Late', 'deadline cross', late ? 'k-bad' : '', 'late')}
+      ${kpi(`${repDone}<em>/${repDue}</em>`, 'Aaj ki reporting', pct(repDone, repDue) + '% aayi', '', 'norep')}
+    </div>
+    <div class="bigbar" role="img" aria-label="Status ka hissa">${seg.map(([k, col]) => c(k) ? `<i style="width:${c(k) / total * 100}%;background:${col}" title="${stName(k)}: ${c(k)}"></i>` : '').join('')}</div>
+    <div class="legend">${seg.map(([k, col]) => `<span><i style="background:${col}"></i>${stName(k)} ${c(k)}</span>`).join('')}<span><i class="lg-empty"></i>Shuru nahi hua ${c('Not Started')}</span></div>`;
 }
 
 function dashJump(id) {
-  S.df = 'all'; S.dp = null; S.open = id; render();
+  S.df = 'all'; S.dp = null; S.dq = ''; S.open = id; render();
   const el = document.getElementById('c-' + id);
-  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 function setDf(f) { S.df = f; S.open = null; render(); document.getElementById('dash-tasks')?.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
 function setDp(c) { S.dp = S.dp === c ? null : c; S.open = null; render(); document.getElementById('dash-tasks')?.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+function setDq(v) { S.dq = v; S.open = null; const el = document.getElementById('dlist'); if (el) el.innerHTML = dashList(); }
+function dToggle(id) { S.open = S.open === id ? null : id; const el = document.getElementById('dlist'); if (el) el.innerHTML = dashList(); }
+
+const DFILTERS = [
+  ['all', 'Saare', () => true],
+  ['norep', 'Aaj report nahi', t => noRep(t)],
+  ['late', 'Late', t => isLate(t)],
+  ['bl', 'Atke / nahi hue', t => t.status === 'Blocked' || t.status === 'Not Done'],
+  ['vp', 'Verify baaki', t => t.status === 'Verify Pending'],
+  ['noowner', 'Owner nahi', t => t.noOwner],
+  ['done', 'Pure', t => t.status === 'Done']
+];
+
+function dashFiltered() {
+  const d = S.dash;
+  const fn = (DFILTERS.find(f => f[0] === S.df) || DFILTERS[0])[2];
+  const q = (S.dq || '').trim().toLowerCase();
+  let list = d.tasks.filter(fn);
+  if (S.dp) list = list.filter(t => t.rCodes.includes(S.dp) || (t.aRaw || []).includes(S.dp));
+  if (q) list = list.filter(t => (t.kaam + ' ' + t.id + ' ' + t.aNames + ' ' + t.rNames).toLowerCase().includes(q));
+  const rank = t => (t.status === 'Done' ? 2 : t.status === 'Verify Pending' ? 1 : 0);
+  return list.sort((a, b) => rank(a) - rank(b) || (a.daysLeft === '' ? 999 : a.daysLeft) - (b.daysLeft === '' ? 999 : b.daysLeft));
+}
+
+function dlText(t) {
+  if (t.status === 'Done') return `<span class="dl">${esc(t.deadline || '-')}</span>`;
+  const d = t.daysLeft;
+  if (d === '' || d == null) return '<span class="dl">-</span>';
+  if (d < 0) return `<span class="dl late">${-d} din late</span>`;
+  if (d === 0) return '<span class="dl soon">Aaj</span>';
+  if (d === 1) return '<span class="dl soon">Kal</span>';
+  return `<span class="dl">${esc(t.deadline)}<small>${d} din</small></span>`;
+}
+
+function dashList() {
+  const list = dashFiltered();
+  if (!list.length) return `<div class="dempty">Is filter me koi kaam nahi.</div>`;
+  return list.map(t => {
+    const open = S.open === t.id;
+    const [a, b] = idParts(t.id);
+    const l = t.last;
+    return `<div class="trow-wrap ${open ? 'open' : ''}" id="c-${esc(t.id)}">
+      <button class="trow" onclick="dToggle('${t.id}')" aria-expanded="${open}">
+        <span class="tid s-${cls(t.status)}">${esc(a)}<b>${esc(b)}</b></span>
+        <span class="c-kaam">${esc(t.kaam)}${t.noOwner ? '<em class="warn">Owner nahi</em>' : ''}</span>
+        <span class="c-a">${esc(t.aNames || '-')}</span>
+        <span class="c-r">${esc(t.rNames || '-')}</span>
+        <span class="c-dl">${dlText(t)}</span>
+        <span class="c-st"><span class="pill p-${cls(t.status)}">${esc(stName(t.status))}</span></span>
+      </button>
+      ${open ? `<div class="tdetail">
+        <div class="tdg">
+          <div><label>Accountable</label>${esc(t.aNames || 'koi nahi')}</div>
+          <div><label>Team</label>${esc(t.rNames || 'koi nahi')}</div>
+          <div><label>Deadline</label>${esc(t.deadline || '-')}</div>
+          <div><label>Done kab maanenge</label>${esc(t.done || '-')}</div>
+        </div>
+        ${t.today.length && isOpenSt(t.status) ? `<label>Aaj ki report</label><div class="who">${t.today.map(x => `<span class="s-${x.status ? cls(x.status) : 'ns'}">${esc(x.naam)}: ${x.status ? esc(stName(x.status)) : 'abhi nahi'}</span>`).join('')}</div>` : ''}
+        ${l ? `<div class="quote"><b>Aakhri report:</b> ${esc(l.naam)}, ${esc(l.date)}<br>${esc(l.kya)}
+          ${l.rukawat ? `<br><b>Rukawat:</b> ${esc(l.rukawat)}` : ''}${l.kal ? `<br><b>Agla step:</b> ${esc(l.kal)}` : ''}
+          ${l.proof ? `<br><a href="${esc(l.proof)}" target="_blank" rel="noopener">Photo proof dekho</a>` : ''}</div>`
+        : '<div class="note">Is kaam ki abhi tak koi report nahi aayi.</div>'}
+        ${t.note ? `<div class="note">${esc(t.note)}</div>` : ''}
+        <div class="tact"><button class="sbtn2" onclick="openEdit('${t.id}')">${ICON.edit}Badlo</button>
+          <button class="sbtn2 danger" id="del-${esc(t.id)}" onclick="deleteTask('${t.id}')">${ICON.trash}Hatao</button></div>
+      </div>` : ''}
+    </div>`;
+  }).join('');
+}
 
 function viewDash() {
   const d = S.dash;
@@ -681,70 +903,55 @@ function viewDash() {
   if (d.error) return `<div class="empty"><b>Dashboard load nahi hua</b>${esc(d.error)}</div>`;
   if (S.edit) return editForm();
   const T = d.tasks;
-  const repDone = d.people.reduce((n, p) => n + p.repToday, 0), repDue = d.people.reduce((n, p) => n + p.dueToday, 0);
-  const filters = [
-    ['all', 'Saare kaam', T.length, false],
-    ['norep', 'Aaj report nahi', T.filter(noRep).length, true],
-    ['late', 'Late', T.filter(isLate).length, true],
-    ['bl', 'Atke hue', T.filter(t => t.status === 'Blocked').length, true],
-    ['vp', 'Verify baaki', T.filter(t => t.status === 'Verify Pending').length, false],
-    ['noowner', 'Owner nahi', T.filter(t => t.noOwner).length, true],
-    ['done', 'Pure', T.filter(t => t.status === 'Done').length, false]
-  ];
-  const fn = { all: () => true, norep: noRep, late: isLate, bl: t => t.status === 'Blocked', vp: t => t.status === 'Verify Pending', noowner: t => t.noOwner, done: t => t.status === 'Done' }[S.df];
-  let list = T.filter(fn);
-  if (S.dp) list = list.filter(t => t.rCodes.includes(S.dp));
-  const rank = t => (t.status === 'Done' ? 2 : t.status === 'Verify Pending' ? 1 : 0);
-  list.sort((a, b) => rank(a) - rank(b) || (a.daysLeft === '' ? 999 : a.daysLeft) - (b.daysLeft === '' ? 999 : b.daysLeft));
   const segColors = [['Done', 'var(--done)'], ['Verify Pending', 'var(--vp)'], ['WIP', 'var(--gold)'], ['Not Done', 'var(--nd)'], ['Blocked', 'var(--bl)']];
+  const call = m => m ? `<a class="callb" href="tel:${esc(m)}" aria-label="Call karo">${ICON.phone}</a>` : '';
+
+  // alerts
+  const alerts = [];
+  d.silent.forEach(x => alerts.push(`<div class="al"><i class="dot bad"></i><div><b>${esc(x.naam)}</b> ki ${x.days} din se report nahi<small>${esc(x.kaam)}</small></div>${call(x.mobile)}</div>`));
+  d.doubts.forEach(x => alerts.push(`<div class="al"><i class="dot gold"></i><div><b>${esc(x.naam)}</b> ka sawal<small>${esc(x.kaam)}: "${esc(x.doubt)}"</small></div>${call(x.mobile)}</div>`));
+  T.filter(t => t.status === 'Blocked').forEach(t => alerts.push(`<div class="al" onclick="dashJump('${t.id}')"><i class="dot bl"></i><div><b>Atka hua:</b> ${esc(t.kaam)}<small>${esc((t.last && t.last.rukawat) || 'Rukawat nahi likhi')}</small></div></div>`));
+  const noOwner = T.filter(t => t.noOwner).length;
+  if (noOwner) alerts.push(`<div class="al" onclick="setDf('noowner')"><i class="dot bad"></i><div><b>${noOwner} kaam bina owner ke</b><small>A ya R bharna baaki hai</small></div></div>`);
+
+  const people = [...d.people].sort((a, b) => (b.dueToday - b.repToday) - (a.dueToday - a.repToday));
+  const tiles = [...T].sort((a, b) => String(a.id).localeCompare(String(b.id)));
+  const fTitle = (DFILTERS.find(f => f[0] === S.df) || DFILTERS[0])[1];
   const pName = S.dp ? (d.people.find(p => p.code === S.dp) || {}).naam : '';
 
-  let h = `<button class="btn addbtn" onclick="openEdit()">${ICON.plus}Naya kaam jodo</button>`;
-  h += `<div class="chips">${filters.map(([k, n, c, w]) => `<button class="chip ${S.df === k ? 'on' : ''} ${w && c ? 'warn' : ''}" onclick="setDf('${k}')">${n} <b>${c}</b></button>`).join('')}</div>`;
-
-  h += `<div class="sec">Team, aaj ki reporting ${repDone}/${repDue}</div>` + d.people.map(p => {
-    const segs = segColors.map(([s, col]) => p.st[s] ? `<i style="width:${p.st[s] / p.total * 100}%;background:${col}"></i>` : '').join('');
-    return `<button class="prow ${S.dp === p.code ? 'on' : ''}" onclick="setDp('${p.code}')">
-      <div class="pn">${esc(p.naam)}<small>${p.total} kaam</small></div>
-      <div class="pbar"><div class="seg">${segs}</div>
-        <div class="pcount"><span>Aaj report <b>${p.repToday}/${p.dueToday}</b></span><span>Accept <b>${p.accepted}/${p.accTotal}</b></span>${p.late ? `<span class="bad">${p.late} late</span>` : ''}</div></div></button>`;
-  }).join('');
-
-  const call = m => m ? `<a href="tel:${esc(m)}" aria-label="Call karo">${ICON.phone}</a>` : '';
-  if (d.silent.length || d.doubts.length) {
-    h += `<div class="sec">Aaj call karo</div>`
-      + d.silent.map(s => `<div class="alert"><div><b>${esc(s.naam)}</b>: ${esc(s.kaam)}<small>${s.days} din se report nahi aayi</small></div>${call(s.mobile)}</div>`).join('')
-      + d.doubts.map(x => `<div class="alert doubt"><div><b>${esc(x.naam)}</b> ka sawal: ${esc(x.kaam)}<small>"${esc(x.doubt)}"</small></div>${call(x.mobile)}</div>`).join('');
-  }
-
-  const fTitle = filters.find(f => f[0] === S.df)[1];
-  h += `<div class="sec" id="dash-tasks" style="display:flex;justify-content:space-between;align-items:baseline;gap:8px;scroll-margin-top:12px">
-      <span>${esc(fTitle)}${pName ? ', ' + esc(pName) : ''} (${list.length})</span>
-      ${S.dp || S.df !== 'all' ? `<button class="clear" onclick="S.df='all';S.dp=null;render()">Filter hatao</button>` : ''}</div>`;
-  if (!list.length) return h + `<div class="empty"><b>Is filter me koi kaam nahi</b>Dusra filter chuno.</div>`;
-
-  h += list.map(t => {
-    const open = S.open === t.id;
-    const l = t.last;
-    return `<div class="task ${open ? 'open' : ''}" id="c-${esc(t.id)}" style="scroll-margin-top:12px">
-      <button class="task-h" onclick="toggle('${t.id}')" aria-expanded="${open}">${plotBlock(t, t.status)}
-        <div class="task-main"><div class="task-title">${esc(t.kaam)}</div>
-        <div class="task-meta"><span class="pill p-${cls(t.status)}">${esc(stName(t.status))}</span>${t.status !== 'Done' ? due(t) : ''}${t.noOwner ? '<span class="due late">Owner nahi</span>' : ''}</div></div></button>
-      ${open ? `<div class="task-body">
-        <div class="info"><b>Accountable:</b> ${esc(t.aNames || 'koi nahi')}&nbsp;&nbsp; <b>Team:</b> ${esc(t.rNames || 'koi nahi')}</div>
-        <div class="info"><b>Deadline:</b> ${esc(t.deadline || '-')}</div>
-        ${t.today.length && isOpenSt(t.status) ? `<div class="info" style="margin-top:12px"><b>Aaj ki report</b></div>
-          <div class="who">${t.today.map(x => `<span class="s-${x.status ? cls(x.status) : 'ns'}">${esc(x.naam)}: ${x.status ? esc(stName(x.status)) : 'abhi nahi'}</span>`).join('')}</div>` : ''}
-        ${l ? `<div class="quote"><b>Aakhri report:</b> ${esc(l.naam)}, ${esc(l.date)}<br>${esc(l.kya)}
-          ${l.rukawat ? `<br><b>Rukawat:</b> ${esc(l.rukawat)}` : ''}${l.kal ? `<br><b>Agla step:</b> ${esc(l.kal)}` : ''}
-          ${l.proof ? `<br><a href="${esc(l.proof)}" target="_blank" rel="noopener">Photo proof dekho</a>` : ''}</div>`
-        : '<div class="note">Is kaam ki abhi tak koi report nahi aayi.</div>'}
-        ${t.note ? `<div class="note">${esc(t.note)}</div>` : ''}
-        <div class="row2"><button class="btn soft" onclick="openEdit('${t.id}')">${ICON.edit}Badlo</button>
-          <button class="btn out" id="del-${esc(t.id)}" onclick="deleteTask('${t.id}')">${ICON.trash}Hatao</button></div>
-      </div>` : ''}</div>`;
-  }).join('');
-  return h;
+  return `<div class="dgrid">
+    <section class="pnl p-tasks" id="dash-tasks">
+      <div class="ph"><h2>Kaam <span>${fTitle}${pName ? ', ' + esc(pName) : ''}</span></h2>
+        <input class="search" type="search" placeholder="Kaam ya naam dhoondho" value="${esc(S.dq)}" oninput="setDq(this.value)" aria-label="Kaam dhoondho"></div>
+      <div class="ftabs">${DFILTERS.map(([k, n, fn]) => { const cnt = T.filter(fn).length; return `<button class="${S.df === k ? 'on' : ''}" onclick="setDf('${k}')">${n}<b>${cnt}</b></button>`; }).join('')}
+        ${S.dp ? `<button class="clr" onclick="setDp('${S.dp}')">${esc(pName)} ✕</button>` : ''}</div>
+      <div class="trow thead"><span>ID</span><span>Kaam</span><span class="c-a">Accountable</span><span class="c-r">Team</span><span class="c-dl">Deadline</span><span class="c-st">Status</span></div>
+      <div id="dlist">${dashList()}</div>
+    </section>
+    <aside class="dside">
+      <section class="pnl">
+        <div class="ph"><h2>Aaj dhyan dein</h2><span class="cnt2">${alerts.length}</span></div>
+        ${alerts.length ? alerts.join('') : '<div class="dempty">Sab theek hai. Koi alert nahi.</div>'}
+      </section>
+      <section class="pnl">
+        <div class="ph"><h2>Team</h2><span class="hint2">Naam dabao, uske kaam dikhenge</span></div>
+        ${people.map(p => {
+          const segs = segColors.map(([st, col]) => p.st[st] ? `<i style="width:${p.st[st] / p.total * 100}%;background:${col}"></i>` : '').join('');
+          const rp = p.dueToday ? Math.round(p.repToday / p.dueToday * 100) : 100;
+          return `<button class="tm ${S.dp === p.code ? 'on' : ''}" onclick="setDp('${p.code}')">
+            <span class="av">${esc(p.naam.slice(0, 1))}</span>
+            <span class="tm-m"><span class="tm-n">${esc(p.naam)}<small>${p.total} kaam</small></span>
+              <span class="seg">${segs}</span>
+              <span class="tm-s"><span class="${rp < 50 ? 'bad' : ''}">Aaj ${p.repToday}/${p.dueToday}</span><span>Accept ${p.accepted}/${p.accTotal}</span>${p.late ? `<span class="bad">${p.late} late</span>` : ''}</span></span>
+          </button>`;
+        }).join('')}
+      </section>
+      <section class="pnl">
+        <div class="ph"><h2>Project naksha</h2><span class="hint2">Har plot ek kaam</span></div>
+        <div class="mnaksha">${tiles.map(t => { const [a, b] = idParts(t.id); return `<button class="mt s-${cls(t.status)} ${isLate(t) ? 'late' : ''}" onclick="dashJump('${t.id}')" title="${esc(t.kaam)}: ${esc(stName(t.status))}"><span>${esc(a)}</span>${esc(b)}</button>`; }).join('')}</div>
+      </section>
+    </aside>
+  </div>`;
 }
 
 /* ---------- KAAM ADD / EDIT / DELETE ---------- */
