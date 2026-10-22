@@ -292,17 +292,30 @@ function due(t) {
 /* ---------- START / LOGIN ---------- */
 
 async function start() {
-  try { S.team = await api('team'); }
-  catch (e) { renderLogin(e.message); return; }
   const c = lsGet('ts_code'), p = lsGet('ts_pin');
   if (c && p) {
     S.code = c; S.pin = p;
-    try { await loadMe(true); return; } catch (e) { lsSet('ts_pin', null); }
+    let cached = null;
+    try { cached = JSON.parse(lsGet('ts_me_' + c) || 'null'); } catch (e) {}
+    if (cached && cached.tasks) {           // pichhla data turant dikhao, peeche se naya laao
+      S.me = cached; S.tab = 'report'; S.stale = true; render();
+      loadTeam();
+      try { await loadMe(); S.stale = false; render(); } catch (e) { if (/PIN|Code/.test(e.message)) logout(); else { S.stale = false; render(); toast('Internet slow hai, purana data dikh raha hai', true); } }
+      return;
+    }
+    try { await loadMe(true); loadTeam(); return; } catch (e) { lsSet('ts_pin', null); }
   }
+  try { S.team = await api('team'); lsSet('ts_team', JSON.stringify(S.team)); }
+  catch (e) { renderLogin(e.message); return; }
   renderLogin();
+}
+async function loadTeam() {
+  try { S.team = JSON.parse(lsGet('ts_team') || '[]'); } catch (e) {}
+  try { S.team = await api('team'); lsSet('ts_team', JSON.stringify(S.team)); } catch (e) {}
 }
 
 function renderLogin(error) {
+  if (!S.team || !S.team.length) { try { S.team = JSON.parse(lsGet('ts_team') || '[]'); } catch (e) {} }
   const saved = lsGet('ts_code') || '';
   app.innerHTML = `
   <div class="login-bg"><div class="login">
@@ -332,13 +345,17 @@ async function doLogin() {
   catch (e) { toast(e.message, true); b.disabled = false; b.textContent = 'Login karo'; }
 }
 
+function setMe(me) {
+  S.me = me;
+  lsSet('ts_me_' + S.code, JSON.stringify(me));
+}
 async function loadMe(first) {
-  S.me = await api('login');
+  setMe(await api('login'));
   if (first) S.tab = S.me.tasks.some(t => t.needsAccept) ? 'accept' : 'report';
   render();
 }
 
-function logout() { lsSet('ts_pin', null); S.me = null; S.pin = ''; S.msgs = null; renderLogin(); }
+function logout() { lsSet('ts_pin', null); lsSet('ts_me_' + S.code, null); S.me = null; S.pin = ''; S.msgs = null; renderLogin(); }
 
 /* ---------- MAIN RENDER ---------- */
 
@@ -352,12 +369,12 @@ const TITLES = {
 
 function render() {
   const T = S.me.tasks;
-  const pend = T.filter(t => t.mustReport && !t.reportedToday);
+  const pend = T.filter(t => t.canReport && !t.reportedToday);
   const repd = T.filter(t => t.reportedToday);
   const acc = T.filter(t => t.needsAccept);
   const ver = T.filter(t => t.canVerify);
   const tabs = [
-    ['report', 'Report', pend.length, ICON.report],
+    ['report', 'Report', pend.filter(t => t.mustReport).length, ICON.report],
     ['accept', 'Accept', acc.length, ICON.accept],
     ...(ver.length ? [['verify', 'Verify', ver.length, ICON.verify]] : []),
     ['all', 'Mere kaam', 0, ICON.list],
@@ -371,7 +388,7 @@ function render() {
   app.innerHTML = `
   <header class="top"><div class="top-in">
     <div class="top-row">
-      <div><div class="hello">Namaste, ${esc(S.me.naam)}</div><div class="sub">${esc(S.me.today)}, Project Sarola</div></div>
+      <div><div class="hello">Namaste, ${esc(S.me.naam)}</div><div class="sub">${esc(S.me.today)}, Project Sarola${S.stale ? ' · <span style="color:var(--gold)">update ho raha hai...</span>' : ''}</div></div>
       <div class="top-actions">${callBtn}
         <button class="ibtn" onclick="refresh()" aria-label="Refresh">${ICON.refresh}</button>
         <button class="ibtn" onclick="logout()" aria-label="Logout">${ICON.logout}</button></div>
@@ -424,10 +441,13 @@ function toggle(id) { S.open = S.open === id ? null : id; render(); }
 
 function viewReport() {
   const T = S.me.tasks;
-  const pend = T.filter(t => t.mustReport && !t.reportedToday);
+  const mine = T.filter(t => t.mustReport && !t.reportedToday);
+  const asA = T.filter(t => t.canReport && !t.mustReport && !t.reportedToday);
+  const pend = mine.concat(asA);
   const done = T.filter(t => t.reportedToday);
   let h = '';
-  if (pend.length) h += `<div class="sec">Report baaki hai (${pend.length})</div>` + pend.map(reportCard).join('');
+  if (mine.length) h += `<div class="sec">Report baaki hai (${mine.length})</div>` + mine.map(reportCard).join('');
+  if (asA.length) h += `<div class="sec">Aap Accountable ho (${asA.length})</div><div class="hintline" style="margin:-4px 2px 6px">Inki report team daalegi. Aap bhi update daal sakte ho.</div>` + asA.map(reportCard).join('');
   else if (done.length) h += `<div class="empty"><b>Aaj ka kaam pura</b>Saari report ho gayi. Kal subah naye kaam yahan dikhenge.</div>`;
   else h += `<div class="empty"><b>Aaj koi kaam nahi</b>Aapke naam abhi koi pending kaam nahi hai.</div>`;
   if (done.length) h += `<div class="sec">Aaj report di (${done.length})</div>` + done.map(t => `
@@ -500,11 +520,23 @@ async function submitReport(id) {
   const b = document.getElementById('f-btn-' + id); b.disabled = true; b.textContent = 'Bhej rahe hain...';
   try {
     const photo = file ? await compress(file) : null;
-    const r = await api('report', { taskId: id, status, kya, kal, rukawat: ruk, photo });
-    S.open = null; delete S.pick[id]; S.justDone = id;
-    await loadMe();
+    const prev = S.me;
+    // turant dikhao, server ka jawab baad me aayega
+    S.me = { ...S.me, tasks: S.me.tasks.map(t => t.id === id ? { ...t, reportedToday: { status, kya } } : t) };
+    S.open = null; S.justDone = id; render();
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    toast(r.status === 'Verify Pending' ? 'Report bhej di. Accountable verify karenge.' : 'Report bhej di');
+    toast('Report bhej rahe hain...');
+    try {
+      const r = await api('report', { taskId: id, status, kya, kal, rukawat: ruk, photo });
+      delete S.pick[id]; S.dash = null;
+      setMe(r.me); render();
+      toast(r.status === 'Verify Pending' ? 'Report bhej di. Accountable verify karenge.' : 'Report bhej di');
+    } catch (e) {
+      S.me = prev; S.open = id; render();
+      const f = (k, v) => { const el = document.getElementById(k + id); if (el) el.value = v; };
+      f('f-kya-', kya); f('f-kal-', kal); f('f-ruk-', ruk);
+      toast(e.message + ' (likha hua bacha hai, dobara bhejo)', true);
+    }
   } catch (e) { toast(e.message, true); b.disabled = false; b.textContent = 'Report bhejo'; }
 }
 
@@ -535,7 +567,7 @@ function viewAccept() {
 
 async function sendAccept(items, btn, okMsg) {
   if (btn) { btn.disabled = true; btn.textContent = 'Save ho raha hai...'; }
-  try { await api('accept', { items }); await loadMe(); toast(okMsg); }
+  try { const r = await api('accept', { items }); S.dash = null; setMe(r.me); render(); toast(okMsg); }
   catch (e) { toast(e.message, true); if (btn) btn.disabled = false; render(); }
 }
 function acceptOne(id, btn) { sendAccept([{ taskId: id, response: 'Accepted' }], btn, 'Kaam accept ho gaya'); }
@@ -576,7 +608,7 @@ async function verify(id, decision, btn) {
   const comment = document.getElementById('v-' + id).value.trim();
   if (decision === 'reject' && !comment) return toast('Wapas bhejne ka reason likho', true);
   btn.disabled = true;
-  try { await api('verify', { taskId: id, decision, comment }); await loadMe(); toast(decision === 'approve' ? 'Done approve ho gaya' : 'Kaam wapas bhej diya'); }
+  try { const r = await api('verify', { taskId: id, decision, comment }); S.dash = null; setMe(r.me); render(); toast(decision === 'approve' ? 'Done approve ho gaya' : 'Kaam wapas bhej diya'); }
   catch (e) { toast(e.message, true); btn.disabled = false; }
 }
 
@@ -785,7 +817,7 @@ async function saveTask() {
     const r = await api('taskSave', { task });
     const wasEdit = !!task.id;
     S.edit = null; S.dash = null; S.df = 'all'; S.dp = null; S.open = r.id;
-    await loadMe();
+    setMe(r.me); render();
     toast(wasEdit ? 'Badlav save ho gaya, Sheet bhi update ho gayi' : `Kaam jud gaya (${r.id}), Sheet me bhi aa gaya`);
   } catch (e) { toast(e.message, true); b.disabled = false; b.textContent = task.id ? 'Save karo' : 'Kaam jodo'; }
 }
@@ -796,9 +828,9 @@ async function deleteTask(id) {
   if (!confirm(`"${t.kaam}" ko hamesha ke liye hatana hai?\n\nYe Sheet se bhi hat jayega. Iski purani reports record me bachi rahengi.\n\nKaam pura hua hai to hatane ki jagah Done approve karo.`)) return;
   const b = document.getElementById('del-' + id); if (b) { b.disabled = true; b.textContent = 'Hata rahe hain...'; }
   try {
-    await api('taskDelete', { taskId: id });
+    const r = await api('taskDelete', { taskId: id });
     S.dash = null; S.open = null;
-    await loadMe();
+    setMe(r.me); render();
     toast('Kaam hata diya, Sheet se bhi hat gaya');
   } catch (e) { toast(e.message, true); if (b) { b.disabled = false; b.textContent = 'Hatao'; } }
 }
